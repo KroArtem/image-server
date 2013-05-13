@@ -1,0 +1,6 @@
+*.[oa]
+*~
+*.txt
+*.exe
+!README.txt
+CMakeFiles/

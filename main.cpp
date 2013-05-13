@@ -1,9 +1,8 @@
 #include <stdio.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include <sys/socket.h>
 
-#ifdef WIN32
+#ifdef _WIN32
 
 #include <winsock2.h>
 #include <process.h>
@@ -11,13 +10,10 @@
 #else
 
 #include <sys/socket.h>
-#include <unistd.h>
 #include <pthread.h>
 
 #endif
 
-#include <sys/stat.h>
-#include <sys/types.h>
 
 #ifdef _WIN32
 #define CloseSocket  closesocket
@@ -35,8 +31,7 @@ Project ->
 */
 #ifdef _WIN32
 
-unsigned stdcall ProcessRequest(void* ptr_s);
-#else
+unsigned __stdcall ProcessRequest(void* ptr_s);
 
 #endif
 

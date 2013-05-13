@@ -1,5 +1,10 @@
 #include <ctime>
+
+#ifdef _WIN32
+
 #include <process.h>
+
+#endif
 #include <iostream>
 #include <string>
 #include <map>
@@ -25,9 +30,9 @@ string CompressSpaces(const string& s)
 	return out;
 }
 
-std::string ReceiveBytes(SOCKET sock)
+string ReceiveBytes(SOCKET sock)
 {
-	std::string ret;
+	string ret;
 	char buf[1024];
 
 	for ( ; ; )
@@ -39,7 +44,7 @@ std::string ReceiveBytes(SOCKET sock)
 		if (arg > 1024) arg = 1024;
 		int rv = recv (sock, buf, arg, 0);
 		if (rv <= 0) break;
-		std::string t;
+		string t;
 		t.assign (buf, rv);
 		ret += t;
 	}
@@ -47,9 +52,9 @@ std::string ReceiveBytes(SOCKET sock)
 	return ret;
 }
 
-std::string ReceiveLine(SOCKET sock)
+string ReceiveLine(SOCKET sock)
 {
-	std::string ret;
+	string ret;
 
 	while (1)
 	{
@@ -67,13 +72,13 @@ std::string ReceiveLine(SOCKET sock)
 	}
 }
 
-void SendLine(SOCKET sock, std::string s)
+void SendLine(SOCKET sock, string s)
 {
 	s += '\n';
 	send(sock,s.c_str(),s.length(),0);
 }
 
-void SendBytes(SOCKET sock, const std::string& s)
+void SendBytes(SOCKET sock, const string& s)
 {
 	send(sock,s.c_str(),s.length(),0);
 }
@@ -89,16 +94,18 @@ unsigned __stdcall ProcessRequest(void* ptr_s)
 
 	http_request req;
 
-	if (line.find("GET") == 0) {
+	if (line.find("GET") == 0) 
+	{
 		req.method_="GET";
 	}
-	else if (line.find("POST") == 0) {
+	else if (line.find("POST") == 0) 
+	{
 		cout << "POST" << endl;
 		req.method_="POST";
 	}
 
 	string path;
-	std::map<string, string> params;
+	map<string, string> params;
 
 	// cut POST/GET from the beginning of the string
 	size_t posStartPath = 
@@ -140,8 +147,8 @@ unsigned __stdcall ProcessRequest(void* ptr_s)
 		if(req.method_ == "GET")
 			if (line.empty())
 			{ 
-			cout << "Breaking in " << req.method_ << endl; 
-			break;
+				cout << "Breaking in " << req.method_ << endl; 
+				break;
 			}
 
 		unsigned int pos_cr_lf = line.find_first_of("\x0a\x0d");
@@ -150,33 +157,41 @@ unsigned __stdcall ProcessRequest(void* ptr_s)
 
 		line = line.substr(0,pos_cr_lf);
 
-		if(line.substr(0, 2) == "--") {
+		if(line.substr(0, 2) == "--") 
+		{
 			if(the_boundary.empty())
 			{
 				the_boundary = line;
 				cout << "STORING Boundary: " << the_boundary << endl;
-			} else
+			} 
+			else
 			{
 				cout << "Got terminator of content" << endl;
 				break;
 			}
-		} else
-		if (line.substr(0, accept.size()) == accept) {
+		} 
+		else if (line.substr(0, accept.size()) == accept) 
+		{
 			req.accept_ = line.substr(accept.size());
 		}
-		else if (line.substr(0, accept_language.size()) == accept_language) {
+		else if (line.substr(0, accept_language.size()) == accept_language) 
+		{
 			req.accept_language_ = line.substr(accept_language.size());
 		}
-		else if (line.substr(0, accept_encoding.size()) == accept_encoding) {
+		else if (line.substr(0, accept_encoding.size()) == accept_encoding) 
+		{
 			req.accept_encoding_ = line.substr(accept_encoding.size());
 		}
-		else if (line.substr(0, user_agent.size()) == user_agent) {
+		else if (line.substr(0, user_agent.size()) == user_agent) 
+		{
 			req.user_agent_ = line.substr(user_agent.size());
 		}
-		else if (line.substr(0, content_length.size()) == content_length) {
+		else if (line.substr(0, content_length.size()) == content_length) 
+		{
 			req.content_length_ = line.substr(content_length.size());
 		}
-		else if (line.substr(0, content_disposition.size()) == content_disposition) {
+		else if (line.substr(0, content_disposition.size()) == content_disposition) 
+		{
 			req.content_disposition_ = line.substr(content_disposition.size());
 		}
 		else if(!the_boundary.empty())
@@ -186,7 +201,7 @@ unsigned __stdcall ProcessRequest(void* ptr_s)
 		}
 	}
 
-	// std::remove_if(req.content_.begin(), req.content_.end(), std::isspace);
+	// remove_if(req.content_.begin(), req.content_.end(), isspace);
 
 	cout << "=======Data=========" << endl;
 	cout << req.content_ << endl;
@@ -199,7 +214,7 @@ unsigned __stdcall ProcessRequest(void* ptr_s)
 
 	FormResponse(&req);
 
-	std::stringstream str_str;
+	stringstream str_str;
 	str_str << req.answer_.size();
 
 	time_t ltime;
