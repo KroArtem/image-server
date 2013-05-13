@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <string.h>
 
 #ifdef _WIN32
 
@@ -9,9 +10,12 @@
 
 #else
 
-#include <sys/socket.h>
-#include <pthread.h>
-
+#include <sys/socket.h>					// for basic socket functions
+#include <netinet/in.h>					// for sockaddr_in and others
+#include <pthread.h>					// for pthread instead of process_request?
+#include <stdlib.h>
+#include <netdb.h>
+#include <unistd.h>						// for close()
 #endif
 
 
@@ -19,7 +23,11 @@
 #define CloseSocket  closesocket
 #else
 #define CloseSocket close
+#define INVALID_SOCKET -1
+#define SOCKET_ERROR -1
+#define SOCKET int
 #endif
+
 
 /*
 Project -> 
@@ -48,7 +56,7 @@ int main()
 {
 	
 
-#ifdef  _WIN32
+#ifdef  _WIN32							// init winsock under windows
 	WSADATA info;
 	if (WSAStartup(MAKEWORD(2,0), &info))
 	{
@@ -65,8 +73,8 @@ int main()
 
 	sa.sin_family = PF_INET;             
 	sa.sin_port=htons(port_to_listen);
-
 	SOCKET in_socket = socket(AF_INET, SOCK_STREAM, 0);
+
 
 	if(in_socket == INVALID_SOCKET) { exit(2); }
 

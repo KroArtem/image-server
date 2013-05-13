@@ -5,6 +5,12 @@
 
 using std::string;
 
+#ifdef _WIN32
+#else
+#define SOCKET int
+#endif
+
+
 /// TODO: Handle %0A etc.
 string Htmlize(const string _in)
 {

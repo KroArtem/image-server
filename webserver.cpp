@@ -85,7 +85,9 @@ void SendBytes(SOCKET sock, const string& s)
 
 void FormResponse(http_request* r);
 
+#ifdef _WIN32
 unsigned __stdcall ProcessRequest(void* ptr_s)
+#endif
 {
 	SOCKET s = (SOCKET)ptr_s;
   

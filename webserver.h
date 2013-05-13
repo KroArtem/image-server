@@ -5,9 +5,16 @@
 #include <winsock2.h>
 #else
 #include <sys/socket.h>
+
 #endif
 using std::string;
 using std::map;
+
+
+#ifdef _WIN32
+#else
+#define SOCKET int
+#endif
 
 struct http_request
 {
