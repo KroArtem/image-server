@@ -30,7 +30,7 @@ void FormResponse(http_request* r)
 
 	string title;
 	string body;
-	string bgcolor="#ffffff";
+	string background = "bg2.png";
 	string links =
       "<br><a href='/form'>form</a> "
       "<br><a href='/header'>show some HTTP header details</a> "
@@ -38,12 +38,13 @@ void FormResponse(http_request* r)
       "<br><a href='/GetValue'>Get some value</a> "
       "<br><a href='/GetProperty'>Get some property</a> "
       "<br><a href='/SetProperty'>Set some property</a> "
+      "<br><a href='/LoadImage'>Upload picture</a> "
       ;
 
 	if(r->path_ == "/") 
 	{
-		title = "Web Server Example";
-		body  = "<h1>Web Server Example</h1>"
+		title = "Web Server for applying filters to photos";
+		body  = "<h1>Web Server </h1>"
 		"I wonder what you're going to click"  + links;
 	}
 	else if(r->path_ == "/upload.php")
@@ -147,7 +148,7 @@ void FormResponse(http_request* r)
 
 	r->answer_  = "<html><head><title>";
 	r->answer_ += title;
-	r->answer_ += "</title></head><body bgcolor='" + bgcolor + "'>";
+	r->answer_ += "</title></head><body background='" + background + "'>";
 	r->answer_ += body;
 	r->answer_ += "</body></html>";
 }

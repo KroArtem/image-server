@@ -1,6 +1,13 @@
 *.[oa]
 *~
+*.cmake
 *.txt
 *.exe
+*.sdf
+*.suo
 !README.txt
+!CMakeLists.txt
 CMakeFiles/
+Debug/
+ipch/
+main.dir/
