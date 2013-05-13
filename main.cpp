@@ -1,4 +1,7 @@
 #include <stdio.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <sys/socket.h>
 
 #ifdef WIN32
 
@@ -23,7 +26,6 @@
 #endif
 
 /*
-Добавить
 Project -> 
 	... properties ->
 	Configuration properties->
@@ -31,7 +33,7 @@ Project ->
 	Additional dependencies:
           ws2_32.lib
 */
-#ifdef WIN32
+#ifdef _WIN32
 
 unsigned stdcall ProcessRequest(void* ptr_s);
 #else
@@ -59,6 +61,7 @@ int main()
 		exit(1);
 	}
 #endif
+	
 	int max_connections = 5;
 	unsigned int port_to_listen = 8080;
 
