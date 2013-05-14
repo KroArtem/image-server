@@ -1,10 +1,14 @@
 #include <ctime>
 
 #ifdef _WIN32
-
 #include <process.h>
-
+#else
+#include <sys/socket.h>
+#include <sys/ioctl.h>
+#include <errno.h>
+#define ioctlsocket ioctl
 #endif
+
 #include <iostream>
 #include <string>
 #include <map>
@@ -87,7 +91,6 @@ void FormResponse(http_request* r);
 
 #ifdef _WIN32
 unsigned __stdcall ProcessRequest(void* ptr_s)
-#endif
 {
 	SOCKET s = (SOCKET)ptr_s;
   
@@ -244,3 +247,4 @@ unsigned __stdcall ProcessRequest(void* ptr_s)
   
 	return 0;
 }
+#endif

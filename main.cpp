@@ -16,6 +16,9 @@
 #include <stdlib.h>
 #include <netdb.h>
 #include <unistd.h>						// for close()
+#include <semaphore.h>
+#include <unistd.h>   
+#include <signal.h>
 #endif
 
 
@@ -37,24 +40,12 @@ Project ->
 	Additional dependencies:
           ws2_32.lib
 */
-#ifdef _WIN32
 
-unsigned __stdcall ProcessRequest(void* ptr_s);
 
-#endif
-
-/*
-unsigned __stdcall ProcessRequest1(void* ptr_s)
-{
-	printf("Hello\n");
-	closesocket((int)ptr_s);
-	return 0;
-}
-*/
+unsigned stdcall ProcessRequest(void* ptr_s);
 
 int main()
 {
-	
 
 #ifdef  _WIN32							// init winsock under windows
 	WSADATA info;
