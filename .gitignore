@@ -5,6 +5,7 @@
 *.exe
 *.sdf
 *.suo
+*.gch
 !README.txt
 !CMakeLists.txt
 CMakeFiles/

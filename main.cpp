@@ -42,7 +42,7 @@ Project ->
 */
 
 
-unsigned stdcall ProcessRequest(void* ptr_s);
+unsigned __stdcall ProcessRequest(void* ptr_s);
 
 int main()
 {
@@ -83,6 +83,7 @@ int main()
 		if (new_socket == INVALID_SOCKET) { break; }
 
 		unsigned ret;
+		//pthread_create(0, 0, ProcessRequest, (void*)new_socket, 0, &ret);
 		_beginthreadex(0, 0, ProcessRequest, (void*)new_socket, 0, &ret);
 	}
 	CloseSocket(in_socket);
