@@ -35,11 +35,11 @@ void FormResponse(http_request* r)
 	}
 
 	string title;
+	string link = "<link rel='stylesheet' type='text/css' href='css1.css'>";
 	string body;
-	string background = "bg2.png";
+	string background = "red";
 	string links =
-      "<br><a href='/form'>form</a> "
-      "<br><a href='/header'>show some HTTP header details</a> "
+      "<br><a href='/header'>Show HTTP header details</a> "
       "<br><a href='/SetValue'>Set some value</a> "
       "<br><a href='/GetValue'>Get some value</a> "
       "<br><a href='/GetProperty'>Get some property</a> "
@@ -50,6 +50,7 @@ void FormResponse(http_request* r)
 	if(r->path_ == "/") 
 	{
 		title = "Web Server for applying filters to photos";
+		//link =  "rel=\"stylesheet\" type=\"text/css\" href=\"css1.css\"";
 		body  = "<h1>Web Server </h1>"
 		" "  + links;
 	}
@@ -154,7 +155,9 @@ void FormResponse(http_request* r)
 
 	r->answer_  = "<html><head><title>";
 	r->answer_ += title;
-	r->answer_ += "</title></head><body background='" + background + "'>";
+	r->answer_ += "</title>";
+	r->answer_ += link;
+	r->answer_ += "</head><body bgcolor='" + background + "'>";
 	r->answer_ += body;
 	r->answer_ += "</body></html>";
 }

@@ -104,7 +104,7 @@ void *ProcessRequest(void *ptr_s)
 	SOCKET s = (SOCKET)ptr_s;
   
 	string line = ReceiveLine(s);
-	if (line.empty()) { ; }
+	if (line.empty()) { return 1; }
 
 	http_request req;
 
@@ -254,5 +254,5 @@ void *ProcessRequest(void *ptr_s)
 
 	CloseSocket(s);
   
-//	return 0;
+	return 0;
 }
