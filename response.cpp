@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include "base64.h"
 #include "webserver.h"
+#include <windows.h>
+#include <winbase.h>
+
 
 using std::string;
 
@@ -37,20 +40,19 @@ void FormResponse(http_request* r)
 	string title;
 	string link = "<link rel='stylesheet' type='text/css' href='css1.css'>";
 	string body;
-	string background = "red";
+	string background = "#ffe4c4";
 	string links =
-      "<br><a href='/header'>Show HTTP header details</a> "
-      "<br><a href='/SetValue'>Set some value</a> "
-      "<br><a href='/GetValue'>Get some value</a> "
-      "<br><a href='/GetProperty'>Get some property</a> "
-      "<br><a href='/SetProperty'>Set some property</a> "
-      "<br><a href='/LoadImage'>Upload picture</a> "
+		"<table><tr><td><br><a href='/header'>Show HTTP header details</a></td></tr> "
+		"<tr><td><br><a href='/SetValue'>Set some value</a></td></tr> "
+		"<tr><td><br><a href='/GetValue'>Get some value</a></td></tr> "
+		"<tr><td><br><a href='/GetProperty'>Get some property</a></td></tr> "
+		"<tr><td><br><a href='/SetProperty'>Set some property</a></td></tr>"
+		"<tr><td><br><a href='/LoadImage'>Upload picture</a></td></tr> "
       ;
 
 	if(r->path_ == "/") 
 	{
 		title = "Web Server for applying filters to photos";
-		//link =  "rel=\"stylesheet\" type=\"text/css\" href=\"css1.css\"";
 		body  = "<h1>Web Server </h1>"
 		" "  + links;
 	}
@@ -75,24 +77,30 @@ void FormResponse(http_request* r)
 	}
 	else if(r->path_ == "/form2")
 	{
-		title   = "Interaction";
+		PROCESS_INFORMATION process;								//winapi specific stuff to call imagemagick
+		STARTUPINFO startup;
+		DWORD code;
+		memset(&startup, 0, sizeof(startup));
+		startup.cb = sizeof(startup);
+		CreateProcessA(0, "C:\\Program Files\\IM\\imdisplay.exe", 0, 0, TRUE, 0, 0, 0, &startup, &process);
 
+		title   = "Interaction";
 		//body = "<form name=\"test\" method=\"post\" action=\"input1.php\">"
 
-		body = "<form name=\"test\" action='/nameparams'>"
-  "<p><b>Name:</b><br>"
-   "<input name=\"nick\" type=\"text\" size=\"40\">"
-  "</p>"
-"  <p><b>Browser:</b><Br>"
-"   <input type=\"radio\" name=\"browser\" value=\"ie\"> Internet Explorer<Br>"
-"   <input type=\"radio\" name=\"browser\" value=\"opera\"> Opera<Br>"
-"   <input type=\"radio\" name=\"browser\" value=\"firefox\"> Firefox<Br>"
-"  </p>"
-"  <p>Comment<Br>"
-"   <textarea name=\"comment\" cols=\"40\" rows=\"3\"></textarea></p>"
-"  <p><input type=\"submit\" value=\"Send\">"
-"   <input type=\"reset\" value=\"Clear\"></p>"
-" </form>";
+		body =		"<form name=\"test\" action='/nameparams'>"
+					"<p><b>Name:</b><br>"
+					"<input name=\"nick\" type=\"text\" size=\"40\">"
+					"</p>"
+					"  <p><b>Browser:</b><Br>"
+					"   <input type=\"radio\" name=\"browser\" value=\"ie\"> Internet Explorer<Br>"
+					"   <input type=\"radio\" name=\"browser\" value=\"opera\"> Opera<Br>"
+					"   <input type=\"radio\" name=\"browser\" value=\"firefox\"> Firefox<Br>"
+					"  </p>"
+					"  <p>Comment<Br>"
+					"   <textarea name=\"comment\" cols=\"40\" rows=\"3\"></textarea></p>"
+					"  <p><input type=\"submit\" value=\"Send\">"
+					"   <input type=\"reset\" value=\"Clear\"></p>"
+					" </form>";
 
 		body += links;
 	}
@@ -157,7 +165,7 @@ void FormResponse(http_request* r)
 	r->answer_ += title;
 	r->answer_ += "</title>";
 	r->answer_ += link;
-	r->answer_ += "</head><body bgcolor='" + background + "'>";
+	r->answer_ += "</head><body bgcolor='" + background + "' style='cursor:crosshair' text='black' alink='green' vlink='black' link='black'>";
 	r->answer_ += body;
 	r->answer_ += "</body></html>";
 }
