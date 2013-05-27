@@ -1,13 +1,13 @@
-#include "webserver.h"
-#include "base64.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include "base64.h"
+#include "webserver.h"
 
 using std::string;
 
 #ifdef _WIN32
 #else
-#define SOCKET int
+#define SOCKET long int
 #endif
 
 

@@ -1,7 +1,7 @@
 #include <stdio.h>
+#include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include <string.h>
 
 #ifdef _WIN32
 
@@ -19,16 +19,18 @@
 #include <semaphore.h>
 #include <unistd.h>   
 #include <signal.h>
+
 #endif
 
-
 #ifdef _WIN32
+#define stdcall    __stdcall
 #define CloseSocket  closesocket
 #else
 #define CloseSocket close
 #define INVALID_SOCKET -1
 #define SOCKET_ERROR -1
-#define SOCKET int
+#define SOCKET long int
+#define stdcall    __attribute__((stdcall))
 #endif
 
 
@@ -42,7 +44,7 @@ Project ->
 */
 
 
-unsigned __stdcall ProcessRequest(void* ptr_s);
+unsigned stdcall ProcessRequest(void* ptr_s);
 
 int main()
 {
@@ -83,8 +85,12 @@ int main()
 		if (new_socket == INVALID_SOCKET) { break; }
 
 		unsigned ret;
-		//pthread_create(0, 0, ProcessRequest, (void*)new_socket, 0, &ret);
+		#ifdef _WIN32
 		_beginthreadex(0, 0, ProcessRequest, (void*)new_socket, 0, &ret);
+		#else
+		pthread_t thread;
+		pthread_create(&thread, NULL, (void*)ProcessRequest, (void*)new_socket);
+		#endif
 	}
 	CloseSocket(in_socket);
 //	WSACleanup();

@@ -1,11 +1,12 @@
-#include <string>
 #include <map>
+#include <string>
 
 #ifdef _WIN32
 #include <winsock2.h>
+#define CloseSocket  closesocket
 #else
 #include <sys/socket.h>
-
+#define CloseSocket close
 #endif
 using std::string;
 using std::map;
@@ -13,7 +14,7 @@ using std::map;
 
 #ifdef _WIN32
 #else
-#define SOCKET int
+#define SOCKET  long int
 #endif
 
 struct http_request

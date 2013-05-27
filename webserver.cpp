@@ -1,23 +1,29 @@
 #include <ctime>
-
-#ifdef _WIN32
-#include <process.h>
-#else
-#include <sys/socket.h>
-#include <sys/ioctl.h>
-#include <errno.h>
-#define ioctlsocket ioctl
-#endif
-
 #include <iostream>
-#include <string>
 #include <map>
 #include <sstream>
-
+#include <string>
 #include "webserver.h"
 #include "UrlHelper.h"
-
 #include "base64.h"
+
+#ifdef _WIN32
+
+#include <process.h>
+#define stdcall    __stdcall
+#define CloseSocket  closesocket
+
+#else
+
+#include <errno.h>
+#include <sys/socket.h>
+#include <sys/ioctl.h>
+#include <unistd.h>	
+#define stdcall    __attribute__((stdcall))
+#define ioctlsocket ioctl
+#define CloseSocket close
+
+#endif
 
 using namespace std;
 
@@ -89,8 +95,7 @@ void SendBytes(SOCKET sock, const string& s)
 
 void FormResponse(http_request* r);
 
-#ifdef _WIN32
-unsigned __stdcall ProcessRequest(void* ptr_s)
+unsigned stdcall ProcessRequest(void* ptr_s)
 {
 	SOCKET s = (SOCKET)ptr_s;
   
@@ -243,8 +248,7 @@ unsigned __stdcall ProcessRequest(void* ptr_s)
 	SendLine(s, "");
 	SendLine(s, req.answer_);
 
-	closesocket(s);
+	CloseSocket(s);
   
 	return 0;
 }
-#endif
