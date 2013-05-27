@@ -95,12 +95,16 @@ void SendBytes(SOCKET sock, const string& s)
 
 void FormResponse(http_request* r);
 
+#ifdef _WIN32
 unsigned stdcall ProcessRequest(void* ptr_s)
+#else
+void *ProcessRequest(void *ptr_s)
+#endif
 {
 	SOCKET s = (SOCKET)ptr_s;
   
 	string line = ReceiveLine(s);
-	if (line.empty()) { return 1; }
+	if (line.empty()) { ; }
 
 	http_request req;
 
@@ -231,7 +235,7 @@ unsigned stdcall ProcessRequest(void* ptr_s)
 	time(&ltime);
 	tm* gmt= gmtime(&ltime);
 
-	static string const serverName = "RenesWebserver (Windows)";
+	static string const serverName = "KroArtem";
 
 	char* asctime_remove_nl = asctime(gmt);
 	asctime_remove_nl[24] = 0;
@@ -250,5 +254,5 @@ unsigned stdcall ProcessRequest(void* ptr_s)
 
 	CloseSocket(s);
   
-	return 0;
+//	return 0;
 }

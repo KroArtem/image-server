@@ -7,15 +7,10 @@
 #else
 #include <sys/socket.h>
 #define CloseSocket close
+#define SOCKET  long int
 #endif
 using std::string;
 using std::map;
-
-
-#ifdef _WIN32
-#else
-#define SOCKET  long int
-#endif
 
 struct http_request
 {

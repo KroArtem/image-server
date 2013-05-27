@@ -51,7 +51,7 @@ void FormResponse(http_request* r)
 	{
 		title = "Web Server for applying filters to photos";
 		body  = "<h1>Web Server </h1>"
-		"I wonder what you're going to click"  + links;
+		" "  + links;
 	}
 	else if(r->path_ == "/upload.php")
 	{

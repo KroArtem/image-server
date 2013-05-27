@@ -1,7 +1,12 @@
 #include <stdio.h>
 #include <string.h>
-#include <sys/stat.h>
-#include <sys/types.h>
+//#include <sys/stat.h>
+//#include <sys/types.h>
+#include "webserver.h"
+//#include "webserver.cpp"
+//#include "UrlHelper.h"
+//#include "base64.h"
+
 
 #ifdef _WIN32
 
@@ -12,13 +17,9 @@
 
 #include <sys/socket.h>					// for basic socket functions
 #include <netinet/in.h>					// for sockaddr_in and others
-#include <pthread.h>					// for pthread instead of process_request?
-#include <stdlib.h>
-#include <netdb.h>
+#include <pthread.h>					// for pthread instead of _beginthreadex
+#include <stdlib.h>						// for exit()
 #include <unistd.h>						// for close()
-#include <semaphore.h>
-#include <unistd.h>   
-#include <signal.h>
 
 #endif
 
@@ -43,8 +44,11 @@ Project ->
           ws2_32.lib
 */
 
-
+#ifdef _WIN32
 unsigned stdcall ProcessRequest(void* ptr_s);
+#else
+void* ProcessRequest(void* ptr_s);
+#endif
 
 int main()
 {
@@ -89,7 +93,7 @@ int main()
 		_beginthreadex(0, 0, ProcessRequest, (void*)new_socket, 0, &ret);
 		#else
 		pthread_t thread;
-		pthread_create(&thread, NULL, (void*)ProcessRequest, (void*)new_socket);
+		ret = pthread_create(&thread, NULL, ProcessRequest, (void*)new_socket);
 		#endif
 	}
 	CloseSocket(in_socket);
