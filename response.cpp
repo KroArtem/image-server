@@ -2,9 +2,11 @@
 #include <stdlib.h>
 #include "base64.h"
 #include "webserver.h"
+
+#ifdef _WIN32
 #include <windows.h>
 #include <winbase.h>
-
+#endif
 
 using std::string;
 
