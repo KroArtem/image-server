@@ -75,14 +75,17 @@ void FormResponse(http_request* r)
 	{
 		body = string("<br>Executing:<br><br>") + Htmlize(r->params_["script"]);
 	}
-	else if(r->path_ == "/form2")
+	else if(r->path_ == "/LoadImage")
 	{
+	
+	#ifdef _WIN32
 		PROCESS_INFORMATION process;								//winapi specific stuff to call imagemagick
 		STARTUPINFO startup;
 		DWORD code;
 		memset(&startup, 0, sizeof(startup));
 		startup.cb = sizeof(startup);
 		CreateProcessA(0, "C:\\Program Files\\IM\\imdisplay.exe", 0, 0, TRUE, 0, 0, 0, &startup, &process);
+	#endif
 
 		title   = "Interaction";
 		//body = "<form name=\"test\" method=\"post\" action=\"input1.php\">"
@@ -100,6 +103,13 @@ void FormResponse(http_request* r)
 					"   <textarea name=\"comment\" cols=\"40\" rows=\"3\"></textarea></p>"
 					"  <p><input type=\"submit\" value=\"Send\">"
 					"   <input type=\"reset\" value=\"Clear\"></p>"
+					" </form>"
+
+
+					"<form enctype=\"multipart/form-data\" method=\"POST\">"
+					"<p>Upload your photo to the server</p>"
+					"<p><input type=\"file\" name=\"photo\" multiple accept=\"image/*,image/jpeg\">"
+					"<input type=\"submit\" name=\"submmit\" value=\"Send\"></p>"
 					" </form>";
 
 		body += links;
