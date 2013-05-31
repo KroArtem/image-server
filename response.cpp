@@ -87,7 +87,7 @@ void FormResponse(http_request* r)
 		DWORD code;
 		memset(&startup, 0, sizeof(startup));
 		startup.cb = sizeof(startup);
-		char* fullParam = "C:\\Program Files\\IM\\convert.exe \"C:\\Program Files\\IM\\015.jpeg" "C:\\Program Files\\IM\\015.png\"";
+		char* fullParam = "C:\\Program Files\\IM\\convert.exe C:\\015.jpeg C:\\015.png";
 		//char* source = "C:\\Program Files\\IM\\015.jpeg";
 		//char* dest = "C:\\Program Files\\IM\\015.png";
 		//sprintf(fullParam,"C:\\Program Files\\IM\\convert.exe %s %s",source, dest);
