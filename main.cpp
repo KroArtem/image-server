@@ -12,7 +12,8 @@
 
 #include <winsock2.h>
 #include <process.h>
-
+#define stdcall    __stdcall
+#define CloseSocket  closesocket
 #else
 
 #include <sys/socket.h>					// for basic socket functions
@@ -20,13 +21,6 @@
 #include <pthread.h>					// for pthread instead of _beginthreadex
 #include <stdlib.h>						// for exit()
 #include <unistd.h>						// for close()
-
-#endif
-
-#ifdef _WIN32
-#define stdcall    __stdcall
-#define CloseSocket  closesocket
-#else
 #define CloseSocket close
 #define INVALID_SOCKET -1
 #define SOCKET_ERROR -1
@@ -90,7 +84,7 @@ int main()
 
 		unsigned ret;
 		#ifdef _WIN32
-		_beginthreadex(0, 0, ProcessRequest, (void*)new_socket, 0, &ret);
+		_beginthreadex(0, 0, ProcessRequest, (void*)new_socket, 0, &ret);		//start new thread if you have any response
 		#else
 		pthread_t thread;
 		ret = pthread_create(&thread, NULL, ProcessRequest, (void*)new_socket);

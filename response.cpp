@@ -50,6 +50,7 @@ void FormResponse(http_request* r)
 		"<tr><td><br><a href='/GetProperty'>Get some property</a></td></tr> "
 		"<tr><td><br><a href='/SetProperty'>Set some property</a></td></tr>"
 		"<tr><td><br><a href='/LoadImage'>Upload picture</a></td></tr> "
+		"<tr><td><br><img src = \"001.jpeg\"></td</tr>"
       ;
 
 	if(r->path_ == "/") 
@@ -86,7 +87,11 @@ void FormResponse(http_request* r)
 		DWORD code;
 		memset(&startup, 0, sizeof(startup));
 		startup.cb = sizeof(startup);
-		CreateProcessA(0, "C:\\Program Files\\IM\\imdisplay.exe", 0, 0, TRUE, 0, 0, 0, &startup, &process);
+		char* fullParam = "C:\\Program Files\\IM\\convert.exe \"C:\\Program Files\\IM\\015.jpeg" "C:\\Program Files\\IM\\015.png\"";
+		//char* source = "C:\\Program Files\\IM\\015.jpeg";
+		//char* dest = "C:\\Program Files\\IM\\015.png";
+		//sprintf(fullParam,"C:\\Program Files\\IM\\convert.exe %s %s",source, dest);
+		CreateProcessA(0, fullParam, 0, 0, TRUE, 0, 0, 0, &startup, &process);
 	#endif
 
 		title   = "Interaction";

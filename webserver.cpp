@@ -247,7 +247,7 @@ void *ProcessRequest(void *ptr_s)
 	SendLine(s, string("Date: ") + asctime_remove_nl + " GMT");
 	SendLine(s, string("Server: ") +serverName);
 	SendLine(s, "Connection: close");
-	SendLine(s, "Content-Type: text/html; charset=ISO-8859-1");
+	SendLine(s, "Content-Type: text/html; charset=ISO-8859-1"); // FIXME!
 	SendLine(s, "Content-Length: " + str_str.str());
 	SendLine(s, "");
 	SendLine(s, req.answer_);
