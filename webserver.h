@@ -9,6 +9,7 @@
 #define CloseSocket close
 #define SOCKET  long int
 #endif
+
 using std::string;
 using std::map;
 
@@ -20,6 +21,7 @@ struct http_request
 	string                        path_;
 	map<string, string> params_;
 
+	
 	string                        accept_;
 	string                        accept_language_;
 	string                        accept_encoding_;
@@ -37,4 +39,5 @@ struct http_request
 	string content_;
 	string content_length_;
 	string content_disposition_;
+	string content_type_;
 };

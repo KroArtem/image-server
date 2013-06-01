@@ -145,25 +145,34 @@ void *ProcessRequest(void *ptr_s)
 
 	static const string content_disposition = "Content-Disposition: ";
 
+	static const string content_type	= "Content-Type: ";
+
 	string the_boundary;
 
 	req.content_.clear();
 	req.content_length_.clear();
 	req.content_disposition_.clear();
+	req.content_type_.clear();									// Haven't tested;
 
 	while(1)
 	{
 		line = ReceiveLine(s);
 
-		cout <<
-			"Parsing line: " << line << endl;
+		cout << "Parsing line: " << line << endl;
 
+		if(req.path_ == "/css1.css") {req.content_type_="text/css";}
+		
 		if(req.method_ == "GET")
 			if (line.empty())
 			{ 
 				cout << "Breaking in " << req.method_ << endl; 
 				break;
 			}
+		
+		if(req.method_ == "POST")
+		{
+			//req.content_type_ = "application/octet-stream";
+		}
 
 		unsigned int pos_cr_lf = line.find_first_of("\x0a\x0d");
 		if(req.method_ == "GET")
@@ -195,6 +204,10 @@ void *ProcessRequest(void *ptr_s)
 		else if (line.substr(0, accept_encoding.size()) == accept_encoding) 
 		{
 			req.accept_encoding_ = line.substr(accept_encoding.size());
+		}
+		else if (line.substr(0, content_type.size()) == content_type) 
+		{
+			req.content_type_ = line.substr(content_type.size());
 		}
 		else if (line.substr(0, user_agent.size()) == user_agent) 
 		{
@@ -247,11 +260,11 @@ void *ProcessRequest(void *ptr_s)
 	SendLine(s, string("Date: ") + asctime_remove_nl + " GMT");
 	SendLine(s, string("Server: ") +serverName);
 	SendLine(s, "Connection: close");
-	SendLine(s, "Content-Type: text/html; charset=ISO-8859-1"); // FIXME!
+	
 	SendLine(s, "Content-Length: " + str_str.str());
 	SendLine(s, "");
 	SendLine(s, req.answer_);
-
+	SendLine(s, content_type + req.content_type_);
 	CloseSocket(s);
   
 	return 0;

@@ -6,15 +6,11 @@
 #ifdef _WIN32
 #include <windows.h>
 #include <winbase.h>
-#endif
-
-using std::string;
-
-#ifdef _WIN32
 #else
 #define SOCKET long int
 #endif
 
+using std::string;
 
 /// TODO: Handle %0A etc.
 string Htmlize(const string _in)
@@ -36,6 +32,7 @@ void FormResponse(http_request* r)
 
 	if(r->method_=="POST")
 	{
+		//r->content_type_="application/octet-stream";
 		printf("Path for post is %s\n", r->path_.c_str());
 	}
 
@@ -45,55 +42,40 @@ void FormResponse(http_request* r)
 	string background = "#ffe4c4";
 	string links =
 		"<table><tr><td><br><a href='/header'>Show HTTP header details</a></td></tr> "
-		"<tr><td><br><a href='/SetValue'>Set some value</a></td></tr> "
-		"<tr><td><br><a href='/GetValue'>Get some value</a></td></tr> "
-		"<tr><td><br><a href='/GetProperty'>Get some property</a></td></tr> "
-		"<tr><td><br><a href='/SetProperty'>Set some property</a></td></tr>"
+		//"<tr><td><br><a href='/SetValue'>Set some value</a></td></tr> "
+		//"<tr><td><br><a href='/GetValue'>Get some value</a></td></tr> "
+		//"<tr><td><br><a href='/GetProperty'>Get some property</a></td></tr> "
+		//"<tr><td><br><a href='/SetProperty'>Set some property</a></td></tr>"
 		"<tr><td><br><a href='/LoadImage'>Upload picture</a></td></tr> "
-		"<tr><td><br><img src = \"001.jpeg\"></td</tr>"
+		"<tr><td><br><img src = \"bg2.png\"></td</tr>"
       ;
-
 	if(r->path_ == "/") 
 	{
 		title = "Web Server for applying filters to photos";
 		body  = "<h1>Web Server </h1>"
 		" "  + links;
 	}
-	else if(r->path_ == "/upload.php")
-	{
-		printf("Got method[%s] for upload.php\n", r->method_.c_str());
+	//else if(r->path_ == "/upload.php")
+	//{
+	//	printf("Got method[%s] for upload.php\n", r->method_.c_str());
 
-		printf("Uploaded data:\n%s\n", r->content_.c_str());
+	//	printf("Uploaded data:\n%s\n", r->content_.c_str());
 
-		printf("Decode64:\n%s\n", base64_decode(r->content_).c_str());
-	}
-	else if(r->path_ == "/SetValue")
-	{
-		body = "";
+	//	printf("Decode64:\n%s\n", base64_decode(r->content_).c_str());
+	//}
+	//else if(r->path_ == "/SetValue")
+	//{
+	//	body = "";
 
-		body += "<br>Var name : " + r->params_["VarName"];
-		body += "<br>Var value: " + r->params_["VarValue"];
-	}
-	else if(r->path_ == "/ExecScript")
-	{
-		body = string("<br>Executing:<br><br>") + Htmlize(r->params_["script"]);
-	}
+	//	body += "<br>Var name : " + r->params_["VarName"];
+	//	body += "<br>Var value: " + r->params_["VarValue"];
+	//}
+	//else if(r->path_ == "/ExecScript")
+	//{
+	//	body = string("<br>Executing:<br><br>") + Htmlize(r->params_["script"]);
+	//}
 	else if(r->path_ == "/LoadImage")
 	{
-	
-	#ifdef _WIN32
-		PROCESS_INFORMATION process;								//winapi specific stuff to call imagemagick
-		STARTUPINFO startup;
-		DWORD code;
-		memset(&startup, 0, sizeof(startup));
-		startup.cb = sizeof(startup);
-		char* fullParam = "C:\\Program Files\\IM\\convert.exe C:\\015.jpeg C:\\015.png";
-		//char* source = "C:\\Program Files\\IM\\015.jpeg";
-		//char* dest = "C:\\Program Files\\IM\\015.png";
-		//sprintf(fullParam,"C:\\Program Files\\IM\\convert.exe %s %s",source, dest);
-		CreateProcessA(0, fullParam, 0, 0, TRUE, 0, 0, 0, &startup, &process);
-	#endif
-
 		title   = "Interaction";
 		//body = "<form name=\"test\" method=\"post\" action=\"input1.php\">"
 
@@ -118,6 +100,18 @@ void FormResponse(http_request* r)
 					"<p><input type=\"file\" name=\"photo\" multiple accept=\"image/*,image/jpeg\">"
 					"<input type=\"submit\" name=\"submmit\" value=\"Send\"></p>"
 					" </form>";
+		
+#ifdef _WIN32
+		PROCESS_INFORMATION process;								//winapi specific stuff to call imagemagick
+		STARTUPINFO startup;
+		DWORD code;
+		memset(&startup, 0, sizeof(startup));
+		startup.cb = sizeof(startup);
+		char* fullParam = "C:\\Program Files\\IM\\convert.exe C:\\015.jpeg C:\\015.png";
+		CreateProcessA(0, fullParam, 0, 0, TRUE, 0, 0, 0, &startup, &process);
+		Sleep(1000);
+		TerminateProcess(process.hProcess,NO_ERROR);			//killing process after 1000 ms
+#endif
 
 		body += links;
 	}
@@ -140,24 +134,50 @@ void FormResponse(http_request* r)
 		title   = "Fill a form";
 
 		body    = "<h1>Fill a form</h1>";
-		body   += "<form action='/form'>"
-			"<table>"
-			"<tr><td>Field 1</td><td><input name=field_1></td></tr>"
-			"<tr><td>Field 2</td><td><input name=field_2></td></tr>"
-			"<tr><td>Field 3</td><td><input name=field_3></td></tr>"
-			"</table>"
-			"<input type=submit></form>";
+		//body   +=// "<form action='/form'>"
+			//"<table>"
+			//"<tr><td>Field 1</td><td><input name=field_1></td></tr>"
+			//"<tr><td>Field 2</td><td><input name=field_2></td></tr>"
+			//"<tr><td>Field 3</td><td><input name=field_3></td></tr>"
+			//"</table>"
+			//"<input type=submit></form>";
 
-		for (map<string, string>::const_iterator i = r->params_.begin();
-			i != r->params_.end();
-			i++)
-			 
+		body+= "<form><p>Фильтр:<input name=\"nameparam\">"
+			   "</p><p><button formaction=\"handle\" formmethod=\"POST\""
+			   "formenctype=\"multipart/form-data\">Отправить</button></form>";
+		body+="<p>Поддерживаемые команды - transverse, transpose, negate, monochrome, auto-gamma, auto-level</p>";
+
+		//for (map<string, string>::const_iterator i = r->params_.begin(); i != r->params_.end(); i++)	 
+		//{
+		//	string q = i->second;
+		//	printf("got param %s = %s", i->first.c_str(), i->second.c_str());
+		//	body += "<br>" + i->first + " = " + i->second;
+		//}
+
+		body += "<hr>" + links;
+	}
+	else if(r->path_ == "/handle")
+	{
+		title = "result";
+		for (map<string, string>::const_iterator i = r->params_.begin(); i != r->params_.end(); i++)	 
 		{
+			string q = i->second;
 			printf("got param %s = %s", i->first.c_str(), i->second.c_str());
 			body += "<br>" + i->first + " = " + i->second;
 		}
+		char s[10] = "";
 
-		body += "<hr>" + links;
+		PROCESS_INFORMATION process;								//winapi specific stuff to call imagemagick
+		STARTUPINFO startup;
+		DWORD code;
+		memset(&startup, 0, sizeof(startup));
+		startup.cb = sizeof(startup);
+		char fullParam[100];
+		sprintf(fullParam,"C:\\Program Files\\IM\\convert.exe C:\\015.jpeg %s C:\\015.png",s);
+		CreateProcessA(0, fullParam, 0, 0, TRUE, 0, 0, 0, &startup, &process);
+		Sleep(1000);
+		TerminateProcess(process.hProcess,NO_ERROR);			//killing process after 1000 ms
+
 	}
 	else if (r->path_ == "/header") 
 	{
@@ -167,8 +187,18 @@ void FormResponse(http_request* r)
 		"<tr><td>Accept-Encoding:</td><td>" + r->accept_encoding_ + "</td></tr>" +
 		"<tr><td>Accept-Language:</td><td>" + r->accept_language_ + "</td></tr>" +
 		"<tr><td>User-Agent:</td><td>"      + r->user_agent_      + "</td></tr>" +
+		"<tr><td>Content-type:</td><td>"	+ r->content_type_	  + "</td></tr>" +
 		"</table>"                                                +
 		links;
+	}
+	else if (r->path_ == "/css1.css")
+	{	
+		r->method_	= "POST";
+		r->content_type_ = "text/css";
+	}
+	else if(r->path_ == "/bg2.png")
+
+	{	r->content_type_ = "application/octet-stream";
 	}
 	else 
 	{
