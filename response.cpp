@@ -43,8 +43,9 @@ void FormResponse(http_request* r)
 		"<table><tr><td><br><a href='/header'>Show HTTP header details</a></td></tr> "
 		"<tr><td><br><a href='/form'>Form</a></td></tr> "
 		"<tr><td><br><a href='/LoadImage'>Upload picture</a></td></tr> "
-		"<tr><td><br><img src = \"bg2.png\"></td</tr>"
+		"<tr><td><br><img src = \"001.jpeg\"></td</tr>"
       ;
+
 	if(r->path_ == "/") 
 	{
 		title = "Web Server for applying filters to photos";
@@ -55,7 +56,7 @@ void FormResponse(http_request* r)
 	else if(r->path_ == "/LoadImage")
 	{
 		title   = "Interaction";
-		body =		"<form name=\"test\" action='/nameparams'>"
+		body	= "<form name=\"test\" action='/nameparams'>"
 					"<p><b>Name:</b><br>"
 					"<input name=\"nick\" type=\"text\" size=\"40\">"
 					"  <p>Comment<Br>"
@@ -74,25 +75,25 @@ void FormResponse(http_request* r)
 		body += links;
 	}
 
-	else if( r->path_ == "/nameparams") // input1.php
+	else if( r->path_ == "/nameparams")
 	{
 		title = "result";
 
 		body = "";
 
-			string str = r->params_.begin()->second;
+			string str = r->params_.begin()->second;				//receive command to use
 			char *cstr = new char[str.length() + 1];
 			strcpy(cstr, str.c_str());
 			body += "<br>" + str;
 		#ifdef _WIN32
-			PROCESS_INFORMATION process;								//winapi specific stuff to call imagemagick
+			PROCESS_INFORMATION process;							//winapi specific stuff to call imagemagick
 			STARTUPINFO startup;
 			memset(&startup, 0, sizeof(startup));
 			startup.cb = sizeof(startup);
 			char fullParam[120];
 			sprintf(fullParam, "C:\\Program Files\\IM\\convert.exe C:\\015.jpeg -%s C:\\015.png", str.c_str());
 			CreateProcessA(0, fullParam, 0, 0, TRUE, 0, 0, 0, &startup, &process);
-			Sleep(1000);
+			Sleep(1000);											//not the best way to check whether it's ready
 			TerminateProcess(process.hProcess,NO_ERROR);			//killing process after 1000 ms
 		#endif
 		body += "<hr>" + links;
@@ -139,9 +140,9 @@ void FormResponse(http_request* r)
 		r->content_type_ = "text/css";
 	}
 
-	else if(r->path_ == "/bg2.png")
+	else if(r->path_ == "/001.jpeg")
 	{
-		r->content_type_ = "application/octet-stream";
+		r->content_type_ = "image/jpeg";
 	}
 
 	else 
