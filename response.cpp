@@ -91,10 +91,12 @@ void FormResponse(http_request* r)
 			memset(&startup, 0, sizeof(startup));
 			startup.cb = sizeof(startup);
 			char fullParam[120];
+			//HANDLE h;
 			sprintf(fullParam, "C:\\Program Files\\IM\\convert.exe C:\\015.jpeg -%s C:\\015.png", str.c_str());
 			CreateProcessA(0, fullParam, 0, 0, TRUE, 0, 0, 0, &startup, &process);
-			Sleep(1000);											//not the best way to check whether it's ready
-			TerminateProcess(process.hProcess,NO_ERROR);			//killing process after 1000 ms
+			WaitForSingleObject(process.hProcess,INFINITE);
+			//Sleep(1000);											//not the best way to check whether it's ready
+			//TerminateProcess(process.hProcess,NO_ERROR);			//killing process after 1000 ms
 		#endif
 		body += "<hr>" + links;
 

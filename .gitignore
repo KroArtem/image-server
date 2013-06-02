@@ -6,6 +6,7 @@
 *.sdf
 *.suo
 *.gch
+*.opensdf
 !README.txt
 !CMakeLists.txt
 CMakeFiles/
